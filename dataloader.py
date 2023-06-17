@@ -5,7 +5,7 @@ from torch.utils.data import Dataset
 from transformers import BertTokenizerFast
 import numpy as np
 
-class DataLoader(Dataset):
+class CustomDataLoader(Dataset):
     def __init__(self, dataframe, model_name='bert-base-uncased'):
         self.tokenizer = BertTokenizerFast.from_pretrained(model_name)
         self.original_data = dataframe
@@ -21,6 +21,9 @@ class DataLoader(Dataset):
         # Normalize numeric columns
         dataframe = self.normalize_dataframe(dataframe)
 
+        # Handle array or tuple type categorical columns
+        dataframe = self.handle_array_tuple_columns(dataframe)
+
         # Encode string columns
         dataframe = self.encode_dataframe(dataframe)
 
@@ -32,6 +35,14 @@ class DataLoader(Dataset):
     def normalize_dataframe(self, dataframe):
         numeric_columns = dataframe.select_dtypes(include=['int64', 'float64']).columns
         dataframe[numeric_columns] = preprocessing.MinMaxScaler().fit_transform(dataframe[numeric_columns])
+        return dataframe
+
+    def handle_array_tuple_columns(self, dataframe):
+        categorical_columns = dataframe.select_dtypes(include=['object']).columns
+        for column in categorical_columns:
+            if isinstance(dataframe[column].iloc[0], (tuple, list)):
+                col_data = pd.DataFrame(dataframe[column].tolist(), columns=[f'{column}_{i}' for i in range(len(dataframe[column].iloc[0]))])
+                dataframe = pd.concat([dataframe.drop(columns=[column]), col_data], axis=1)
         return dataframe
 
     def encode_dataframe(self, dataframe):
