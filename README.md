@@ -10,7 +10,7 @@ However, it is important to note that GPT-NeoTab doesn't just reproduce any spec
 
 In essence, GPT-NeoTab marries the prowess of the GPT-Neo's language understanding capabilities with the unique requirements of tabular data synthesis, providing a robust solution for generating high-quality, realistic, and privacy-preserving synthetic tabular data."
 <p align="center">
-<img src="https://github.com/[Your GitHub username]/gpt-neo-tabular-data/raw/main/img/dummy_image.png" style="width:75%"/>
+<img src="X (1).png"/>
 </p>
 <p align="center">
 <strong>GPT-NeoTab: Generating Realistic Tabular Data using GPT-Neo</strong>
