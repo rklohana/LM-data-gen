@@ -299,7 +299,7 @@ class LMmodel:
         elif isinstance(start_col_dist, dict):
             temp={}
             for i in start_col_dist.keys():
-                temp[self.label_encoders[start_col].transform([i])[0]]=start_col_dist[i].values()
+                temp[self.label_encoders[start_col].transform([i])[0]]=start_col_dist[i]
             start_col_dist=temp
             obj= CatStart(self.tokenizer, start_col, start_col_dist)
             return obj

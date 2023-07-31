@@ -50,3 +50,9 @@ from LM_syn import LMmodel
 model = LMmodel()
 model.set_metadata(x_train)
 model.load_model(path+"/model.pt")
+```
+## For conditional generation
+
+```Python
+
+samples=model.sample(n_samples=999,cond_col='[Column Name]',cond={'Value':.9})
