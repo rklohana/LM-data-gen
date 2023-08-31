@@ -248,7 +248,7 @@ class LMmodel:
         self.tokenizer.pad_token = self.tokenizer.eos_token
         self.model = AutoModelForCausalLM.from_pretrained('EleutherAI/gpt-neo-125M')
         self.label_encoders={}
-        
+        self.condflag=False
 
 
     def preprocess(self,df):
@@ -263,6 +263,8 @@ class LMmodel:
     
 
     def fit(self, data,batch_size=8,epoch=100, cond_col=None):
+        if cond_col:
+            self.condflag=True
         df = self.preprocess( data)
         self.data=df.copy()
         self.columns = df.columns.to_list()
@@ -280,6 +282,8 @@ class LMmodel:
         return lmmodel_trainer
 
     def set_metadata(self, data, cond_col=None):
+        if cond_col:
+            self.condflag=True
         df = self.preprocess(data)
         self.data=df.copy()
         self.columns = df.columns.to_list()
@@ -297,10 +301,11 @@ class LMmodel:
             obj=ContStart(self.tokenizer, start_col, start_col_dist)
             return obj
         elif isinstance(start_col_dist, dict):
-            # temp={}
-            # for i in start_col_dist.keys():
-            #     temp[self.label_encoders[start_col].transform([i])]=start_col_dist[i]
-            # start_col_dist=temp
+            if self.condflag:
+                temp={}
+                for i in start_col_dist.keys():
+                    temp[self.label_encoders[start_col].transform([i])]=start_col_dist[i]
+                start_col_dist=temp
             obj= CatStart(self.tokenizer, start_col, start_col_dist)
             return obj
         else:
